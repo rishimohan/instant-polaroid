@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
+import imageCompression from "browser-image-compression";
 import { cn } from "@/lib/utils";
 import Header from "@/components/header";
 import PhotoUpload from "@/components/photo-upload";
@@ -64,8 +65,26 @@ export default function Home() {
 
   const handleFileSelect = useCallback(async (file) => {
     try {
+      // Small preview immediately
       const base64 = await fileToBase64(file);
       setPreviewImage(base64);
+
+      // Compress if larger than 1MB
+      if (file.size > 1280 * 1280) {
+        const options = {
+          maxSizeMB: 1, // Target 1MB max
+          maxWidthOrHeight: 1920, // Max 1920px
+          useWebWorker: true,
+        };
+
+        try {
+          const compressedFile = await imageCompression(file, options);
+          const compressedBase64 = await fileToBase64(compressedFile);
+          setPreviewImage(compressedBase64); // Update with compressed version
+        } catch (error) {
+          console.warn("Compression failed, using original", error);
+        }
+      }
     } catch (err) {
       setError("Failed to read file");
       console.error(err);
