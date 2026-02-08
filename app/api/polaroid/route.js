@@ -1,12 +1,59 @@
 import { NextResponse } from "next/server";
+import { headers } from "next/headers";
 
 const ORSHOT_API_URL = "https://api.orshot.com/v1/studio/render";
 const ORSHOT_API_KEY = process.env.ORSHOT_API_KEY;
 const ORSHOT_TEMPLATE_ID =
   process.env.ORSHOT_TEMPLATE_ID || "PLACEHOLDER_TEMPLATE_ID";
 
+// Simple in-memory rate limiter
+const rateLimit = new Map();
+
+const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
+const MAX_REQUESTS = 5;
+
+// Clean up old entries every 5 minutes
+setInterval(
+  () => {
+    const now = Date.now();
+    for (const [ip, data] of rateLimit.entries()) {
+      if (now > data.resetTime) {
+        rateLimit.delete(ip);
+      }
+    }
+  },
+  5 * 60 * 1000,
+);
+
 export async function POST(request) {
   try {
+    const headersList = await headers();
+    const ip = headersList.get("x-forwarded-for") || "unknown";
+
+    const now = Date.now();
+    const limitData = rateLimit.get(ip) || {
+      count: 0,
+      resetTime: now + RATE_LIMIT_WINDOW,
+    };
+
+    if (now > limitData.resetTime) {
+      limitData.count = 0;
+      limitData.resetTime = now + RATE_LIMIT_WINDOW;
+    }
+
+    if (limitData.count >= MAX_REQUESTS) {
+      return NextResponse.json(
+        {
+          error:
+            "You can only make 5 requests per minute. Please try again later.",
+        },
+        { status: 429 },
+      );
+    }
+
+    limitData.count++;
+    rateLimit.set(ip, limitData);
+
     const { imageUrl, caption, backgroundColor, captionColor } =
       await request.json();
 

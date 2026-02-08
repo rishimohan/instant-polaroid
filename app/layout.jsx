@@ -7,15 +7,16 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "Instant Polaroid — Turn photos into polaroid prints",
+  title: "Instant Polaroid — No Signup Polaroid Photo Maker",
   description:
-    "Upload or capture a photo and instantly transform it into a beautiful polaroid-framed print. Built with Orshot API.",
+    "Instantly convert photos to Polaroid prints. Free online tool to add captions and retro frames. No signup required. Perfect for social media & printing.",
   alternates: {
     canonical: "https://instantpolaroid.com",
   },
   openGraph: {
-    title: "Instant Polaroid",
-    description: "Turn your photos into polaroid prints instantly",
+    title: "Instant Polaroid — No Signup Polaroid Photo Maker",
+    description:
+      "Instantly convert photos to Polaroid prints. Free online tool to add captions and retro frames. No signup required. Perfect for social media & printing.",
     url: "https://instantpolaroid.com",
     siteName: "Instant Polaroid",
     type: "website",
@@ -24,14 +25,15 @@ export const metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Instant Polaroid — Turn photos into polaroid prints",
+        alt: "Instant Polaroid — No Signup Polaroid Photo Maker",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Instant Polaroid",
-    description: "Turn your photos into polaroid prints instantly",
+    title: "Free Polaroid Frame Generator — Turn Photos into Polaroids Online",
+    description:
+      "Instantly convert photos to aesthetic Polaroid prints. Free online tool to add captions, backgrounds & retro frames.",
     images: ["/og-image.png"],
     creator: "@thelifeofrishi",
   },
