@@ -36,9 +36,6 @@ importers:
         specifier: ^3.0.2
         version: 3.4.0
     devDependencies:
-      '@eslint/eslintrc':
-        specifier: ^3
-        version: 3.3.3
       '@tailwindcss/postcss':
         specifier: ^4
         version: 4.1.18
