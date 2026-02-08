@@ -1,3 +1,5 @@
+<img width="2400" height="1260" alt="og-image" src="https://github.com/user-attachments/assets/8a953ad9-c7b7-497a-a91b-529e4ccd0ab8" />
+
 # Instant Polaroid
 
 Turn your photos into beautiful polaroid prints — instantly.
