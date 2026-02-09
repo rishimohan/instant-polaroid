@@ -3,12 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Download,
-  X,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, Download, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import PolaroidCard from "@/components/polaroid-card";
@@ -48,14 +43,31 @@ export default function PolaroidGrid({ photos, onRemove, isProcessing }) {
     };
   }, [isOpen, goNext, goPrev, closeLightbox]);
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (!lightboxImage) return;
-    const link = document.createElement("a");
-    link.href = lightboxImage;
-    link.download = `polaroid-${lightboxIndex + 1}.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+
+    try {
+      const response = await fetch(lightboxImage);
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `instant-polaroid-${lightboxIndex + 1}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Download failed:", err);
+      // Fallback
+      const link = document.createElement("a");
+      link.href = lightboxImage;
+      link.download = `instant-polaroid-${lightboxIndex + 1}.png`;
+      link.target = "_blank";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   };
 
   const [isZipping, setIsZipping] = useState(false);
