@@ -11,13 +11,29 @@ export default function PolaroidCard({ image, index, onRemove, onView }) {
   // Slight random rotation for organic feel
   const rotation = ((index * 7 + 3) % 11) - 5; // between -5 and 5 degrees
 
-  const handleDownload = () => {
-    const link = document.createElement("a");
-    link.href = image;
-    link.download = `polaroid-${index + 1}.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handleDownload = async () => {
+    try {
+      const response = await fetch(image);
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `instant-polaroid-${index + 1}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Download failed:", err);
+      // Fallback
+      const link = document.createElement("a");
+      link.href = image;
+      link.download = `instant-polaroid-${index + 1}.png`;
+      link.target = "_blank";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   };
 
   return (
