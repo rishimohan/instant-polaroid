@@ -65,7 +65,7 @@ export default function RootLayout({ children }) {
 
       <Script
         defer
-        src="https://datafa.st/js/script.js"
+        src="/js/fast-script.js"
         data-website-id="dfid_He6CTN6ei8Ws09nIq1V9p"
         data-domain="instantpolaroid.com"
       />
